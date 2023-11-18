@@ -18,3 +18,4 @@ class Tasks(Base):
     finish_time = Column(DateTime, nullable=True, default=None)
     is_available = Column(Boolean, default=True)
     executor = Column(String, default="Не назначен")
+    status = Column(String, default="Создана")

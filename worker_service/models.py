@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Float, Integer, String
+from sqlalchemy import ARRAY, Column, Float, Integer, String
 
 from database import Base
 
@@ -8,7 +8,7 @@ class Worker(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String)
-    speciality = Column(String)
+    speciality = Column(ARRAY(String))
     lat = Column(Float)
     long = Column(Float)
     kpi = Column(Integer)

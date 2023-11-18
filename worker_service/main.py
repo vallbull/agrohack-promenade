@@ -36,7 +36,7 @@ async def startup_event():
     db.query(models.Worker).delete()
     user = models.Worker(
         name="Иван Иванов",
-        speciality="Посев",
+        speciality=["Посев"],
         lat=41.470956,
         long=52.767565,
         kpi=75,
@@ -44,7 +44,7 @@ async def startup_event():
     db.add(user)
     user = models.Worker(
         name="Александр Петров",
-        speciality="Обработка почвы",
+        speciality=["Обработка почвы"],
         lat=41.471952,
         long=52.768468,
         kpi=100,
@@ -52,7 +52,7 @@ async def startup_event():
     db.add(user)
     user = models.Worker(
         name="Екатерина Смирнова",
-        speciality="Защита растений",
+        speciality=["Защита растений"],
         lat=41.468291,
         long=52.769497,
         kpi=65,
@@ -60,7 +60,7 @@ async def startup_event():
     db.add(user)
     user = models.Worker(
         name="Дмитрий Козлов",
-        speciality="Посев",
+        speciality=["Посев"],
         lat=41.477334,
         long=52.771938,
         kpi=38,
@@ -68,7 +68,7 @@ async def startup_event():
     db.add(user)
     user = models.Worker(
         name="Ольга Морозова",
-        speciality="Обработка почвы",
+        speciality=["Обработка почвы"],
         lat=41.476101,
         long=52.772813,
         kpi=65,

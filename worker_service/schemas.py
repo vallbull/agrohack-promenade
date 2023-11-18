@@ -8,7 +8,7 @@ from pydantic import BaseModel
 class Worker(BaseModel):
     id: Optional[int | None] = None
     name: str
-    speciality: str
+    speciality: list[str]
     lat: float
     long: float
     kpi: int

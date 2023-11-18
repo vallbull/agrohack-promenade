@@ -19,6 +19,7 @@ class Tasks(BaseModel):
     finish_time: Optional[datetime | None] = None
     is_available: Optional[bool | None] = None
     executor: Optional[str | None] = None
+    status: Optional[str | None] = None
 
     class Config:
         orm_mode = True
