@@ -11,7 +11,7 @@ from database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI(openapi_url='/worker/openapi.json')
+app = FastAPI(openapi_url='/worker/openapi.json', docs_url='/worker/docs', redoc_url='/worker/redoc')
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -78,17 +78,17 @@ async def startup_event():
     db.close()
 
 
-@app.get("/workers")
+@app.get("/worker")
 def read_root():
-    return "Promenade workers service"
+    return "Promenade worker service"
 
 
-@app.get("/workers/get_all", response_model=list[schemas.Worker])
+@app.get("/worker/get_all", response_model=list[schemas.Worker])
 def get_all(db: Session = Depends(get_db)):
     return db.query(models.Worker).all()
 
 
-@app.get("/workers/get_by_id/{id}", response_model=schemas.Worker)
+@app.get("/worker/get_by_id/{id}", response_model=schemas.Worker)
 def get_by_id(id: int, db: Session = Depends(get_db)):
     worker = db.query(models.Worker).filter(models.Worker.id == id).first()
     if not worker:
@@ -96,28 +96,28 @@ def get_by_id(id: int, db: Session = Depends(get_db)):
     return worker
 
 
-@app.post("/workers/delete_all")
+@app.post("/worker/delete_all")
 def delete_all(db: Session = Depends(get_db)):
     db.query(models.Worker).delete()
     db.commit()
     return {"status": "ok"}
 
 
-@app.post("/workers/delete_by_id/{id}")
+@app.post("/worker/delete_by_id/{id}")
 def delete_by_id(id: int, db: Session = Depends(get_db)):
     db.query(models.Worker).filter(models.Worker.id == id).delete()
     db.commit()
     return {"status": "ok"}
 
 
-@app.put("/workers/update_by_id/{id}")
+@app.put("/worker/update_by_id/{id}")
 def update_by_id(id: int, worker: schemas.Worker, db: Session = Depends(get_db)):
     db.query(models.Worker).filter(models.Worker.id == id).update(worker.model_dump())
     db.commit()
     return {"status": "ok"}
 
 
-@app.post("/workers/add")
+@app.post("/worker/add")
 def add(worker: schemas.Worker, db: Session = Depends(get_db)):
     db.add(models.Worker(**worker.model_dump()))
     db.commit()
