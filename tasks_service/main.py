@@ -11,7 +11,7 @@ from database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI(openapi_url='tasks/openapi.json')
+app = FastAPI(openapi_url='/tasks/openapi.json')
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
