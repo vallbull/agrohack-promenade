@@ -17,7 +17,7 @@ class Tasks(BaseModel):
     processing_area: int
     start_time: Optional[datetime | None] = None
     finish_time: Optional[datetime | None] = None
-    is_available: Optional[bool | None] = None
+    # is_available: Optional[bool | None] = None
     executor: Optional[str | None] = None
     status: Optional[str| None] = None
 

@@ -1,8 +1,10 @@
 import json
 from datetime import date
 
+import sqlalchemy
 from fastapi import Body, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 import models
@@ -11,8 +13,9 @@ from database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI(openapi_url='/tasks/openapi.json', docs_url='/tasks/docs',
-              redoc_url='/tasks/redoc')
+app = FastAPI(
+    openapi_url="/tasks/openapi.json", docs_url="/tasks/docs", redoc_url="/tasks/redoc"
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -35,6 +38,16 @@ def get_db():
 async def startup_event():
     db = SessionLocal()
     db.query(models.Tasks).delete()
+    task = models.Tasks(
+        place_name="Поле 4",
+        type="Обработка почвы",
+        long=52.780545,
+        lat=41.489458,
+        duration=60,
+        priority="Низкий",
+        processing_area=2,
+    )
+    db.add(task)
     task = models.Tasks(
         place_name="Поле 1",
         type="Посев",
@@ -75,16 +88,6 @@ async def startup_event():
         processing_area=2,
     )
     db.add(task)
-    task = models.Tasks(
-        place_name="Поле 4",
-        type="Обработка почвы",
-        long=52.780545,
-        lat=41.489458,
-        duration=60,
-        priority="Низкий",
-        processing_area=2,
-    )
-    db.add(task)
     db.commit()
     db.close()
 
@@ -107,6 +110,25 @@ def get_by_id(id: int, db: Session = Depends(get_db)):
     return task
 
 
+def priority_to_num(priority):
+    if priority == "Высокий":
+        return 1
+    elif priority == "Средний":
+        return 2
+    elif priority == "Низкий":
+        return 3
+
+
+@app.get("/tasks/get_by_worker_name/{worker_name}", response_model=list[schemas.Tasks])
+def get_by_worker_name(worker_name: str, db: Session = Depends(get_db)):
+    return (
+        db.query(models.Tasks)
+        .filter(models.Tasks.executor == worker_name)
+        .order_by(models.Tasks.priority)
+        .all()
+    )
+
+
 @app.post("/tasks/delete_all")
 def delete_all(db: Session = Depends(get_db)):
     db.query(models.Tasks).delete()
@@ -122,7 +144,7 @@ def delete_by_id(id: int, db: Session = Depends(get_db)):
 
 
 @app.put("/tasks/update_by_id/{id}")
-def update_by_id(id: int, task = Body(), db: Session = Depends(get_db)):
+def update_by_id(id: int, task=Body(), db: Session = Depends(get_db)):
     db.query(models.Tasks).filter(models.Tasks.id == id).update(task)
     db.commit()
     return {"status": "ok"}

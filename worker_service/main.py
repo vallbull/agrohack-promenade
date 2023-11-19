@@ -36,7 +36,7 @@ async def startup_event():
     db.query(models.Worker).delete()
     user = models.Worker(
         name="Иван Иванов",
-        speciality=["Посев"],
+        speciality=["Посев", "Обработка почвы", "Защита растений"],
         lat=41.470956,
         long=52.767565,
         kpi=75,
@@ -60,7 +60,7 @@ async def startup_event():
     db.add(user)
     user = models.Worker(
         name="Дмитрий Козлов",
-        speciality=["Посев"],
+        speciality=["Посев", "Защита растений"],
         lat=41.477334,
         long=52.771938,
         kpi=38,
@@ -122,3 +122,20 @@ def add(worker: schemas.Worker, db: Session = Depends(get_db)):
     db.add(models.Worker(**worker.model_dump()))
     db.commit()
     return {"status": "ok"}
+
+
+@app.post("/worker/get_worker_for_task")
+def get_worker_for_task(spec = Body(), db: Session = Depends(get_db)):
+    workers = db.query(models.Worker)
+    rez = list()
+    for worker in workers:
+        worker_spec = worker.speciality
+        worker_name = worker.name
+        flag = True
+        for el in spec:
+            if el not in worker_spec:
+                flag = False
+                break
+        if flag:
+            rez.append(worker_name)
+    return rez
