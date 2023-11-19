@@ -208,7 +208,7 @@ def add(task: schemas.Tasks, db: Session = Depends(get_db)):
 
 
 @app.post("/tasks/start/{id}")
-def start(db: Session = Depends(get_db)):
+def start(id: int, db: Session = Depends(get_db)):
     task = (
         db.query(models.Tasks)
         .filter(models.Tasks.id == id)
@@ -223,7 +223,7 @@ def start(db: Session = Depends(get_db)):
 
 
 @app.post("/tasks/finish/{id}")
-def start(db: Session = Depends(get_db)):
+def start(id: int, db: Session = Depends(get_db)):
     task = (
         db.query(models.Tasks)
         .filter(models.Tasks.id == id)
