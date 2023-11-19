@@ -6,6 +6,18 @@ from typing import Optional
 from pydantic import BaseModel
 
 
+class Worker(BaseModel):
+    id: Optional[int | None] = None
+    name: str
+    speciality: list[str]
+    lat: float
+    long: float
+    kpi: Optional[int] = 0
+
+    class Config:
+        orm_mode = True
+
+
 class Tasks(BaseModel):
     id: Optional[int | None] = None
     place_name: str
@@ -19,7 +31,7 @@ class Tasks(BaseModel):
     finish_time: Optional[datetime | None] = None
     # is_available: Optional[bool | None] = None
     executor: Optional[str | None] = None
-    status: Optional[str| None] = None
+    status: Optional[str | None] = None
 
     class Config:
         orm_mode = True

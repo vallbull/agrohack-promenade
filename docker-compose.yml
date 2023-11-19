@@ -15,18 +15,10 @@ services:
       retries: 5
 
 
-  worker_service:
-      build: ./worker_service
+  promenade_service:
+      build: ./promenade_service
       ports:
         - '8080:8080'
-      depends_on:
-        postgresql:
-          condition: service_healthy
-
-  tasks_service:
-      build: ./tasks_service
-      ports:
-        - '8081:8081'
       depends_on:
         postgresql:
           condition: service_healthy
