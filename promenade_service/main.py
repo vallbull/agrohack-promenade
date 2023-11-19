@@ -286,6 +286,8 @@ def add(worker: schemas.Worker, db: Session = Depends(get_db)):
 @app.get("/worker/get_kpi/{id}")
 def get_kpi(id:int, db: Session = Depends(get_db)):
     worker = db.query(models.Worker).filter(models.Worker.id == id).first()
+    if not worker:
+        return {"kpi": 0, "salary": 0}
     name = worker.name
     finished = db.query(models.Tasks).filter(models.Tasks.executor == name, models.Tasks.status == "Закончена").count()
     all = db.query(models.Tasks).filter(models.Tasks.executor == name).count()
