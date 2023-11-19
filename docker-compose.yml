@@ -22,3 +22,8 @@ services:
       depends_on:
         postgresql:
           condition: service_healthy
+
+  react:
+    build: ./ros_agronom
+    ports:
+      - "5173:5173"
