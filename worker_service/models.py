@@ -11,4 +11,4 @@ class Worker(Base):
     speciality = Column(ARRAY(String))
     lat = Column(Float)
     long = Column(Float)
-    kpi = Column(Integer)
+    kpi = Column(Integer, default=0)

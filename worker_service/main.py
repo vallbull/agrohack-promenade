@@ -1,7 +1,7 @@
 import json
 from datetime import date
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Body, Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
@@ -111,8 +111,8 @@ def delete_by_id(id: int, db: Session = Depends(get_db)):
 
 
 @app.put("/worker/update_by_id/{id}")
-def update_by_id(id: int, worker: schemas.Worker, db: Session = Depends(get_db)):
-    db.query(models.Worker).filter(models.Worker.id == id).update(worker.model_dump())
+def update_by_id(id: int, worker= Body(), db: Session = Depends(get_db)):
+    db.query(models.Worker).filter(models.Worker.id == id).update(worker)
     db.commit()
     return {"status": "ok"}
 

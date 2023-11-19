@@ -11,7 +11,7 @@ class Worker(BaseModel):
     speciality: list[str]
     lat: float
     long: float
-    kpi: int
+    kpi: Optional[int] = 0
 
     class Config:
         orm_mode = True
