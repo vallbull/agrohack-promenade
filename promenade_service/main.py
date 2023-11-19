@@ -1,5 +1,5 @@
 import json
-from datetime import date
+from datetime import date, datetime, timedelta
 
 from fastapi import Body, Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -84,6 +84,8 @@ async def startup_event():
         duration=60,
         priority="Низкий",
         processing_area=2,
+        description="Техника: К-742 #1254 Агрегат: Catros 6TS2 #1 Глубина: 8-10 см Рабочая скорость, км/ч :12-14",
+
     )
     db.add(task)
     task = models.Tasks(
@@ -94,6 +96,7 @@ async def startup_event():
         duration=120,
         priority="Высокий",
         processing_area=4,
+        description="Техника: RSM 3535 #7089 Агрегат: Horsh Pronto NT12 #1 Глубина: 2-3 см Рабочая скорость, км/ч :8-12",
     )
     db.add(task)
     task = models.Tasks(
@@ -104,6 +107,7 @@ async def startup_event():
         duration=95,
         priority="Высокий",
         processing_area=3,
+        description="Техника: К-742 #1254 Агрегат: Catros 6TS2 #1 Глубина: 8-10 см Рабочая скорость, км/ч :12-14",
     )
     db.add(task)
     task = models.Tasks(
@@ -114,16 +118,18 @@ async def startup_event():
         duration=300,
         priority="Средний",
         processing_area=10,
+        description="Техника: Arion 640c #7912 Агрегат: UX5201 36 #3 Рабочая скорость, км/ч :8 Расход рабочего раствора, л/га:200",
     )
     db.add(task)
     task = models.Tasks(
-        place_name="Поле 4",
+        place_name="Поле 5",
         type="Посев",
         long=52.777981,
         lat=41.473423,
         duration=300,
         priority="Низкий",
         processing_area=2,
+        description="Техника: RSM 3535 #7089 Агрегат: Horsh Pronto NT12 #1 Глубина: 2-3 см Рабочая скорость, км/ч :8-12",
     )
     db.add(task)
     db.commit()
@@ -197,6 +203,36 @@ def update_by_id(id: int, task=Body(), db: Session = Depends(get_db)):
 @app.post("/tasks/add")
 def add(task: schemas.Tasks, db: Session = Depends(get_db)):
     db.add(models.Tasks(**task.model_dump()))
+    db.commit()
+    return {"status": "ok"}
+
+
+@app.post("/tasks/start/{id}")
+def start(db: Session = Depends(get_db)):
+    task = (
+        db.query(models.Tasks)
+        .filter(models.Tasks.id == id)
+        .first()
+    )
+    start_time = datetime.now() + timedelta(hours=3)
+    task.start_time = start_time
+    task.status = "В процессе"
+    db.add(task)
+    db.commit()
+    return {"status": "ok"}
+
+
+@app.post("/tasks/finish/{id}")
+def start(db: Session = Depends(get_db)):
+    task = (
+        db.query(models.Tasks)
+        .filter(models.Tasks.id == id)
+        .first()
+    )
+    finish_time = datetime.now() + timedelta(hours=3)
+    task.finish_time = finish_time
+    task.status = "Закончена"
+    db.add(task)
     db.commit()
     return {"status": "ok"}
 
