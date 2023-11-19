@@ -207,7 +207,7 @@ def add(task: schemas.Tasks, db: Session = Depends(get_db)):
     return {"status": "ok"}
 
 
-@app.post("/tasks/start/{id}")
+@app.get("/tasks/start/{id}")
 def start(id: int, db: Session = Depends(get_db)):
     task = (
         db.query(models.Tasks)
@@ -222,8 +222,8 @@ def start(id: int, db: Session = Depends(get_db)):
     return {"status": "ok"}
 
 
-@app.post("/tasks/finish/{id}")
-def start(id: int, db: Session = Depends(get_db)):
+@app.get("/tasks/finish/{id}")
+def finish(id: int, db: Session = Depends(get_db)):
     task = (
         db.query(models.Tasks)
         .filter(models.Tasks.id == id)
@@ -281,6 +281,16 @@ def add(worker: schemas.Worker, db: Session = Depends(get_db)):
     db.add(models.Worker(**worker.model_dump()))
     db.commit()
     return {"status": "ok"}
+
+
+@app.get("/worker/get_kpi/{id}")
+def get_kpi(id:int, db: Session = Depends(get_db)):
+    worker = db.query(models.Worker).filter(models.Worker.id == id).first()
+    name = worker.name
+    finished = db.query(models.Tasks).filter(models.Tasks.executor == name, models.Tasks.status == "Закончена").count()
+    all = db.query(models.Tasks).filter(models.Tasks.executor == name).count()
+    kpi = 0 if all == 0 else finished/all
+    return {"kpi": kpi}
 
 
 @app.post("/worker/get_worker_for_task")
