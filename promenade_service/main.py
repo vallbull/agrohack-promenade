@@ -290,7 +290,7 @@ def get_kpi(id:int, db: Session = Depends(get_db)):
     finished = db.query(models.Tasks).filter(models.Tasks.executor == name, models.Tasks.status == "Закончена").count()
     all = db.query(models.Tasks).filter(models.Tasks.executor == name).count()
     kpi = 0 if all == 0 else finished/all
-    return {"kpi": kpi}
+    return {"kpi": kpi, "salary": kpi * 2000}
 
 
 @app.post("/worker/get_worker_for_task")
