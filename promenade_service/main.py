@@ -177,14 +177,14 @@ def get_by_worker_id(worker_id: str, db: Session = Depends(get_db)):
     )
 
 
-@app.post("/tasks/delete_all")
-def delete_all(db: Session = Depends(get_db)):
-    db.query(models.Tasks).delete()
-    db.commit()
-    return {"status": "ok"}
+# @app.delete("/tasks/delete_all")
+# def delete_all(db: Session = Depends(get_db)):
+#     db.query(models.Tasks).delete()
+#     db.commit()
+#     return {"status": "ok"}
 
 
-@app.post("/tasks/delete_by_id/{id}")
+@app.delete("/tasks/delete_by_id/{id}")
 def delete_by_id(id: int, db: Session = Depends(get_db)):
     db.query(models.Tasks).filter(models.Tasks.id == id).delete()
     db.commit()
@@ -255,14 +255,14 @@ def get_by_id(id: int, db: Session = Depends(get_db)):
     return worker
 
 
-@app.post("/worker/delete_all")
-def delete_all(db: Session = Depends(get_db)):
-    db.query(models.Worker).delete()
-    db.commit()
-    return {"status": "ok"}
+# @app.delete("/worker/delete_all")
+# def delete_all(db: Session = Depends(get_db)):
+#     db.query(models.Worker).delete()
+#     db.commit()
+#     return {"status": "ok"}
 
 
-@app.post("/worker/delete_by_id/{id}")
+@app.delete("/worker/delete_by_id/{id}")
 def delete_by_id(id: int, db: Session = Depends(get_db)):
     db.query(models.Worker).filter(models.Worker.id == id).delete()
     db.commit()
