@@ -32,6 +32,7 @@ class Tasks(BaseModel):
     # is_available: Optional[bool | None] = None
     executor: Optional[str | None] = None
     status: Optional[str | None] = None
+    description: Optional[str | None] = None
 
     class Config:
         orm_mode = True

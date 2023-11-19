@@ -30,3 +30,4 @@ class Tasks(Base):
     # is_available = Column(Boolean, default=True)
     executor = Column(String, default="Не назначен")
     status = Column(String, default="Создана")
+    description = Column(String, default="")
